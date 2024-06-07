@@ -1,6 +1,6 @@
-=IF(DATEDIF(B2, TODAY(), "y")<1, "0-1Y", 
-  IF(DATEDIF(B2, TODAY(), "y")<2, "1-2Y", 
-  IF(DATEDIF(B2, TODAY(), "y")<3, "2-3Y", 
-  IF(DATEDIF(B2, TODAY(), "y")<4, "3-4Y", 
-  IF(DATEDIF(B2, TODAY(), "y")<5, "4-5Y", 
-  IF(DATEDIF(B2, TODAY(), "y")<10, "5-10Y", "10+Y"))))))
+=IF(D2<1, "0-1Y", 
+  IF(D2<2, "1-2Y", 
+  IF(D2<4, "2-4Y", 
+  IF(D2<6, "4-6Y", 
+  IF(D2<8, "6-8Y", 
+  IF(D2<10, "8-10Y", "10+Y"))))))
