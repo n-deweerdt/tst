@@ -1,1 +1,6 @@
-=IF(MONTH(B2)<=3, "Q1", IF(MONTH(B2)<=6, "Q2", IF(MONTH(B2)<=9, "Q3", "Q4")))
+=IF(DATEDIF(B2, TODAY(), "y")<1, "0-1Y", 
+  IF(DATEDIF(B2, TODAY(), "y")<2, "1-2Y", 
+  IF(DATEDIF(B2, TODAY(), "y")<3, "2-3Y", 
+  IF(DATEDIF(B2, TODAY(), "y")<4, "3-4Y", 
+  IF(DATEDIF(B2, TODAY(), "y")<5, "4-5Y", 
+  IF(DATEDIF(B2, TODAY(), "y")<10, "5-10Y", "10+Y"))))))
