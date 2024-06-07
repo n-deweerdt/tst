@@ -1,1 +1,1 @@
-=COUNTA(UNIQUE(FILTER('Outstanding Data'!D:D, ('Outstanding Data'!C:C = Tables!A1) * ('Outstanding Data'!F:F = Tables!A3))))
+=IF(MONTH(B2)<=3, "Q1", IF(MONTH(B2)<=6, "Q2", IF(MONTH(B2)<=9, "Q3", "Q4")))
