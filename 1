@@ -1,1 +1,1 @@
-=SUMPRODUCT((Tables!A1 = 'Outstanding Data'!C:C) * (Tables!A3 = 'Outstanding Data'!F:F) * (1 / COUNTIFS('Outstanding Data'!D:D, 'Outstanding Data'!D:D, 'Outstanding Data'!C:C, Tables!A1, 'Outstanding Data'!F:F, Tables!A3)))
+=COUNTA(UNIQUE(FILTER('Outstanding Data'!D:D, ('Outstanding Data'!C:C = Tables!A1) * ('Outstanding Data'!F:F = Tables!A3))))
