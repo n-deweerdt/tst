@@ -1,1 +1,50 @@
-[=1]"AAA";[=2]"AA+";[=3]"AA";[=4]"AA-";[=5]"A+";[=6]"A";[=7]"A-";[=8]"BBB+";[=9]"BBB";[=10]"BBB-";[=11]"BB+";[=12]"BB";[=13]"BB-";[=14]"B+";[=15]"B";[=16]"B-";[=17]"CCC+";[=18]"CCC";[=19]"CCC-";[=20]"CC";[=21]"C";[=22]"D";General Format
+Function GetRating(value As Double) As String
+    Select Case value
+        Case 1
+            GetRating = "AAA"
+        Case 2
+            GetRating = "AA+"
+        Case 3
+            GetRating = "AA"
+        Case 4
+            GetRating = "AA-"
+        Case 5
+            GetRating = "A+"
+        Case 6
+            GetRating = "A"
+        Case 7
+            GetRating = "A-"
+        Case 8
+            GetRating = "BBB+"
+        Case 9
+            GetRating = "BBB"
+        Case 10
+            GetRating = "BBB-"
+        Case 11
+            GetRating = "BB+"
+        Case 12
+            GetRating = "BB"
+        Case 13
+            GetRating = "BB-"
+        Case 14
+            GetRating = "B+"
+        Case 15
+            GetRating = "B"
+        Case 16
+            GetRating = "B-"
+        Case 17
+            GetRating = "CCC+"
+        Case 18
+            GetRating = "CCC"
+        Case 19
+            GetRating = "CCC-"
+        Case 20
+            GetRating = "CC"
+        Case 21
+            GetRating = "C"
+        Case 22
+            GetRating = "D"
+        Case Else
+            GetRating = "Unknown"
+    End Select
+End Function
