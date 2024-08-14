@@ -1,5 +1,1 @@
-=IFERROR(RANK.EQ([@[P&L%]],[@[P&L%]],1)+COUNTIF([@[P&L%]]:[@[P&L%]],[@[P&L%]])-1,"")
-
-
-=SUMPRODUCT(SMALL(IF((DATA!Bench_Bucket=A4)*(DATA!Sales_AMT<=B4), DATA!P&L$, ""), ROW(INDIRECT("1:"&COUNTIFS(DATA!Bench_Bucket, A4, DATA!Sales_AMT, "<="&B4)))))
 
