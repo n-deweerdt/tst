@@ -4,13 +4,14 @@ Sub CreateISINList()
     Dim twDataTable As ListObject
     Dim isinListTable As ListObject
     Dim twDataRow As ListRow
-    Dim purchaseISINs As New Collection
-    Dim salesISINs As New Collection
+    Dim isinDict As Object
     Dim isinValue As String
     Dim transactionType As String
     Dim i As Long
-    
-    On Error Resume Next  ' For handling duplicate ISINs in the collection
+    Dim key As Variant
+
+    ' Create a dictionary to store ISINs and transaction types
+    Set isinDict = CreateObject("Scripting.Dictionary")
     
     ' Set the worksheets
     Set twDataSheet = ThisWorkbook.Worksheets("TW_Data")
@@ -21,50 +22,51 @@ Sub CreateISINList()
     Set isinListTable = isinListSheet.ListObjects("isin_list")
     
     ' Clear existing data in the isin_list table
-    If isinListTable.DataBodyRange Is Nothing Then
-        ' Do nothing if the table is empty
-    Else
+    If Not isinListTable.DataBodyRange Is Nothing Then
         isinListTable.DataBodyRange.Delete
     End If
     
     ' Loop through the TW_Data table
     For Each twDataRow In twDataTable.ListRows
-        isinValue = Trim(twDataRow.Range(1, 7).Value)  ' Column7
-        transactionType = UCase(Trim(twDataRow.Range(1, 12).Value))  ' Column12
+        isinValue = Trim(twDataRow.Range(1, 7).Value)  ' Column7 contains ISIN
+        transactionType = UCase(Trim(twDataRow.Range(1, 12).Value))  ' Column12 contains transaction type
         
         If isinValue <> "" Then
-            If transactionType = "BUY" Then
-                ' Add to Purchases collection
-                purchaseISINs.Add isinValue, isinValue  ' Key is the ISIN value to avoid duplicates
-            ElseIf transactionType = "SELL" Then
-                ' Add to Sales collection
-                salesISINs.Add isinValue, isinValue  ' Key is the ISIN value to avoid duplicates
+            If Not isinDict.Exists(isinValue) Then
+                ' ISIN not yet added, add it with the transaction type
+                isinDict.Add isinValue, transactionType
+            Else
+                ' ISIN already exists, check if we need to update the transaction type
+                If isinDict(isinValue) = "SELL" And transactionType = "BUY" Then
+                    ' Prioritize BUY over SELL
+                    isinDict(isinValue) = "BUY"
+                End If
+                ' Otherwise, keep the existing transaction type
             End If
         End If
     Next twDataRow
     
-    ' Add ISINs to the isin_list table
-    Dim maxRows As Long
-    maxRows = Application.WorksheetFunction.Max(purchaseISINs.Count, salesISINs.Count)
-    
-    If maxRows > 0 Then
+    ' Determine the number of rows needed
+    Dim numRows As Long
+    numRows = isinDict.Count
+    If numRows > 0 Then
         ' Resize the table to fit the new data
-        isinListTable.Resize isinListTable.Range.Resize(maxRows + 1)
+        isinListTable.Resize isinListTable.Range.Resize(numRows + 1)
+    Else
+        ' If no ISINs found, reset the table to only header row
+        isinListTable.Resize isinListTable.Range.Resize(1)
     End If
     
-    ' Populate Purchases column
+    ' Populate the isin_list table
     i = 1
-    For Each isinValue In purchaseISINs
-        isinListTable.DataBodyRange(i, isinListTable.ListColumns("Purchases").Index).Value = isinValue
+    For Each key In isinDict.Keys
+        If isinDict(key) = "BUY" Then
+            isinListTable.DataBodyRange(i, isinListTable.ListColumns("Purchases").Index).Value = key
+        ElseIf isinDict(key) = "SELL" Then
+            isinListTable.DataBodyRange(i, isinListTable.ListColumns("Sales").Index).Value = key
+        End If
         i = i + 1
-    Next isinValue
-    
-    ' Populate Sales column
-    i = 1
-    For Each isinValue In salesISINs
-        isinListTable.DataBodyRange(i, isinListTable.ListColumns("Sales").Index).Value = isinValue
-        i = i + 1
-    Next isinValue
+    Next key
     
     MsgBox "ISIN List has been created successfully!", vbInformation
 End Sub
