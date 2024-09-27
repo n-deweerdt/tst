@@ -1,1 +1,72 @@
+Sub CreateISINTabs()
+    Dim origSheet As Worksheet
+    Dim isinListSheet As Worksheet
+    Dim purchasesRange As Range
+    Dim salesRange As Range
+    Dim cell As Range
+    Dim newSheet As Worksheet
+    Dim isinValue As String
+
+    ' Set the worksheets
+    Set origSheet = ThisWorkbook.Worksheets("ORIG")
+    Set isinListSheet = ThisWorkbook.Worksheets("ISIN List")
+
+    ' Get the ranges for Purchases and Sales
+    With isinListSheet.ListObjects("isin_list")
+        On Error Resume Next
+        Set purchasesRange = .ListColumns("Purchases").DataBodyRange
+        Set salesRange = .ListColumns("Sales").DataBodyRange
+        On Error GoTo 0
+    End With
+
+    Application.ScreenUpdating = False
+
+    ' Loop through Purchases
+    If Not purchasesRange Is Nothing Then
+        For Each cell In purchasesRange
+            If Trim(cell.Value) <> "" Then
+                isinValue = Trim(cell.Value)
+
+                ' Copy the ORIG sheet
+                origSheet.Copy After:=Sheets(Sheets.Count)
+                Set newSheet = ActiveSheet
+
+                ' Rename the new sheet and set tab color
+                On Error Resume Next
+                newSheet.Name = isinValue
+                On Error GoTo 0
+                newSheet.Tab.Color = vbGreen
+
+                ' Put the ISIN value in cell A1
+                newSheet.Range("A1").Value = isinValue
+            End If
+        Next cell
+    End If
+
+    ' Loop through Sales
+    If Not salesRange Is Nothing Then
+        For Each cell In salesRange
+            If Trim(cell.Value) <> "" Then
+                isinValue = Trim(cell.Value)
+
+                ' Copy the ORIG sheet
+                origSheet.Copy After:=Sheets(Sheets.Count)
+                Set newSheet = ActiveSheet
+
+                ' Rename the new sheet and set tab color
+                On Error Resume Next
+                newSheet.Name = isinValue
+                On Error GoTo 0
+                newSheet.Tab.Color = vbRed
+
+                ' Put the ISIN value in cell A1
+                newSheet.Range("A1").Value = isinValue
+            End If
+        Next cell
+    End If
+
+    Application.ScreenUpdating = True
+
+    MsgBox "ISIN tabs have been created successfully!", vbInformation
+End Sub
 
