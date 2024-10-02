@@ -1,24 +1,32 @@
-NewColumn = 
-VAR CurrentYear = YEAR(TODAY())
-VAR OctFirst = DATE(CurrentYear, 10, 1)
-VAR MaturityDate = [maturitydate]
-VAR DaysDifference = DATEDIFF(OctFirst, MaturityDate, DAY)
-VAR YearsDifference = DaysDifference / 365.25
-VAR MaturitySector = 
-    SWITCH(
-        TRUE(),
-        YearsDifference >= 1 && YearsDifference < 2, "1-2",
-        YearsDifference >= 2 && YearsDifference < 3, "2-3",
-        YearsDifference >= 3 && YearsDifference < 4, "3-4",
-        YearsDifference >= 4 && YearsDifference < 6, "4-6",
-        YearsDifference >= 6 && YearsDifference < 8, "6-8",
-        YearsDifference >= 8 && YearsDifference <=10, "8-10",
-        BLANK()
-    )
-RETURN
-    IF(
-        NOT(ISBLANK(MaturitySector)),
-        [Country] & " " & MaturitySector,
-        BLANK()
+Best-Cover = 
+VAR CurrentTradeDate = [trade date]
+VAR CurrentTradeTime = [tradetime]
+
+VAR Yield_Acc = 
+    CALCULATE(
+        AVERAGE('YourTable'[yield]),
+        FILTER(
+            'YourTable',
+            'YourTable'[trade date] = CurrentTradeDate &&
+            'YourTable'[tradetime] = CurrentTradeTime &&
+            ('YourTable'[tradestate] = "Acc" || 'YourTable'[tradestate] = "Acct")
+        )
     )
 
+VAR Yield_Covr = 
+    CALCULATE(
+        AVERAGE('YourTable'[yield]),
+        FILTER(
+            'YourTable',
+            'YourTable'[trade date] = CurrentTradeDate &&
+            'YourTable'[tradetime] = CurrentTradeTime &&
+            'YourTable'[tradestate] = "Covr"
+        )
+    )
+
+RETURN
+    IF(
+        NOT(ISBLANK(Yield_Acc)) && NOT(ISBLANK(Yield_Covr)),
+        Yield_Acc - Yield_Covr,
+        BLANK()
+    )
