@@ -1,32 +1,28 @@
-Best-Cover = 
-VAR CurrentTradeDate = [trade date]
+Offer Sprd = 
+VAR CurrentTradeDate = [tradedate]
 VAR CurrentTradeTime = [tradetime]
 
-VAR Yield_Acc = 
+VAR MaxYield =
     CALCULATE(
-        AVERAGE('YourTable'[yield]),
+        MAX('YourTable'[yield]),
         FILTER(
             'YourTable',
-            'YourTable'[trade date] = CurrentTradeDate &&
+            'YourTable'[tradedate] = CurrentTradeDate &&
             'YourTable'[tradetime] = CurrentTradeTime &&
-            ('YourTable'[tradestate] = "Acc" || 'YourTable'[tradestate] = "Acct")
+            NOT(ISBLANK('YourTable'[yield]))
         )
     )
 
-VAR Yield_Covr = 
+VAR MinYield =
     CALCULATE(
-        AVERAGE('YourTable'[yield]),
+        MIN('YourTable'[yield]),
         FILTER(
             'YourTable',
-            'YourTable'[trade date] = CurrentTradeDate &&
+            'YourTable'[tradedate] = CurrentTradeDate &&
             'YourTable'[tradetime] = CurrentTradeTime &&
-            'YourTable'[tradestate] = "Covr"
+            NOT(ISBLANK('YourTable'[yield]))
         )
     )
 
 RETURN
-    IF(
-        NOT(ISBLANK(Yield_Acc)) && NOT(ISBLANK(Yield_Covr)),
-        Yield_Acc - Yield_Covr,
-        BLANK()
-    )
+    ABS(MaxYield - MinYield)
