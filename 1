@@ -1,15 +1,32 @@
-Direction = 
+Direction =
 VAR PayAcct = [PAYACCT]
 VAR RecAcct = [RECACCT]
 RETURN
 SWITCH(
     TRUE(),
-    (PayAcct = "BOF" && RecAcct = "EUROCLEAR") || (PayAcct = "EUROCLEAR" && RecAcct = "BOF"), "BOF <-> EC",
-    (PayAcct = "DBB" && RecAcct = "EUROCLEAR") || (PayAcct = "EUROCLEAR" && RecAcct = "DBB"), "DBB <-> EC",
-    (PayAcct = "DNB" && RecAcct = "EUROCLEAR") || (PayAcct = "EUROCLEAR" && RecAcct = "DNB"), "DNB <-> EC",
-    (PayAcct = "DBB" && RecAcct = "BOF") || (PayAcct = "BOF" && RecAcct = "DBB"), "DBB <-> BOF",
-    (PayAcct = "DBB" && RecAcct = "DNB") || (PayAcct = "DNB" && RecAcct = "DBB"), "DBB <-> DNB",
-    (PayAcct = "BOF" && RecAcct = "DNB") || (PayAcct = "DNB" && RecAcct = "BOF"), "BOF <-> DNB",
+    (
+        (CONTAINSSTRING(PayAcct, "BOF") && CONTAINSSTRING(RecAcct, "EUROCLEAR")) ||
+        (CONTAINSSTRING(PayAcct, "EUROCLEAR") && CONTAINSSTRING(RecAcct, "BOF"))
+    ), "BOF <-> EC",
+    (
+        (CONTAINSSTRING(PayAcct, "DBB") && CONTAINSSTRING(RecAcct, "EUROCLEAR")) ||
+        (CONTAINSSTRING(PayAcct, "EUROCLEAR") && CONTAINSSTRING(RecAcct, "DBB"))
+    ), "DBB <-> EC",
+    (
+        (CONTAINSSTRING(PayAcct, "DNB") && CONTAINSSTRING(RecAcct, "EUROCLEAR")) ||
+        (CONTAINSSTRING(PayAcct, "EUROCLEAR") && CONTAINSSTRING(RecAcct, "DNB"))
+    ), "DNB <-> EC",
+    (
+        (CONTAINSSTRING(PayAcct, "DBB") && CONTAINSSTRING(RecAcct, "BOF")) ||
+        (CONTAINSSTRING(PayAcct, "BOF") && CONTAINSSTRING(RecAcct, "DBB"))
+    ), "DBB <-> BOF",
+    (
+        (CONTAINSSTRING(PayAcct, "DBB") && CONTAINSSTRING(RecAcct, "DNB")) ||
+        (CONTAINSSTRING(PayAcct, "DNB") && CONTAINSSTRING(RecAcct, "DBB"))
+    ), "DBB <-> DNB",
+    (
+        (CONTAINSSTRING(PayAcct, "BOF") && CONTAINSSTRING(RecAcct, "DNB")) ||
+        (CONTAINSSTRING(PayAcct, "DNB") && CONTAINSSTRING(RecAcct, "BOF"))
+    ), "BOF <-> DNB",
     "Other"
 )
-
