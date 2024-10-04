@@ -14,6 +14,36 @@ else if
             (Text.Contains([PAYACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DBB", Comparer.OrdinalIgnoreCase))
         )
     ) then "DBB <-> EC"
-/* Repeat for other conditions */
+else if 
+    (
+        not Text.IsNullOrEmpty([PAYACCT]) and not Text.IsNullOrEmpty([RECACCT]) and
+        (
+            (Text.Contains([PAYACCT], "DNB", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase)) or 
+            (Text.Contains([PAYACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DNB", Comparer.OrdinalIgnoreCase))
+        )
+    ) then "DNB <-> EC"
+else if 
+    (
+        not Text.IsNullOrEmpty([PAYACCT]) and not Text.IsNullOrEmpty([RECACCT]) and
+        (
+            (Text.Contains([PAYACCT], "DBB", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "BOF", Comparer.OrdinalIgnoreCase)) or 
+            (Text.Contains([PAYACCT], "BOF", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DBB", Comparer.OrdinalIgnoreCase))
+        )
+    ) then "DBB <-> BOF"
+else if 
+    (
+        not Text.IsNullOrEmpty([PAYACCT]) and not Text.IsNullOrEmpty([RECACCT]) and
+        (
+            (Text.Contains([PAYACCT], "DBB", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DNB", Comparer.OrdinalIgnoreCase)) or 
+            (Text.Contains([PAYACCT], "DNB", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DBB", Comparer.OrdinalIgnoreCase))
+        )
+    ) then "DBB <-> DNB"
+else if 
+    (
+        not Text.IsNullOrEmpty([PAYACCT]) and not Text.IsNullOrEmpty([RECACCT]) and
+        (
+            (Text.Contains([PAYACCT], "BOF", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DNB", Comparer.OrdinalIgnoreCase)) or 
+            (Text.Contains([PAYACCT], "DNB", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "BOF", Comparer.OrdinalIgnoreCase))
+        )
+    ) then "BOF <-> DNB"
 else "Other"
-
