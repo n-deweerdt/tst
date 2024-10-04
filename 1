@@ -1,32 +1,19 @@
-Direction =
-VAR PayAcct = [PAYACCT]
-VAR RecAcct = [RECACCT]
-RETURN
-SWITCH(
-    TRUE(),
+if 
     (
-        (CONTAINSSTRING(PayAcct, "BOF") && CONTAINSSTRING(RecAcct, "EUROCLEAR")) ||
-        (CONTAINSSTRING(PayAcct, "EUROCLEAR") && CONTAINSSTRING(RecAcct, "BOF"))
-    ), "BOF <-> EC",
+        not Text.IsNullOrEmpty([PAYACCT]) and not Text.IsNullOrEmpty([RECACCT]) and
+        (
+            (Text.Contains([PAYACCT], "BOF", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase)) or 
+            (Text.Contains([PAYACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "BOF", Comparer.OrdinalIgnoreCase))
+        )
+    ) then "BOF <-> EC"
+else if 
     (
-        (CONTAINSSTRING(PayAcct, "DBB") && CONTAINSSTRING(RecAcct, "EUROCLEAR")) ||
-        (CONTAINSSTRING(PayAcct, "EUROCLEAR") && CONTAINSSTRING(RecAcct, "DBB"))
-    ), "DBB <-> EC",
-    (
-        (CONTAINSSTRING(PayAcct, "DNB") && CONTAINSSTRING(RecAcct, "EUROCLEAR")) ||
-        (CONTAINSSTRING(PayAcct, "EUROCLEAR") && CONTAINSSTRING(RecAcct, "DNB"))
-    ), "DNB <-> EC",
-    (
-        (CONTAINSSTRING(PayAcct, "DBB") && CONTAINSSTRING(RecAcct, "BOF")) ||
-        (CONTAINSSTRING(PayAcct, "BOF") && CONTAINSSTRING(RecAcct, "DBB"))
-    ), "DBB <-> BOF",
-    (
-        (CONTAINSSTRING(PayAcct, "DBB") && CONTAINSSTRING(RecAcct, "DNB")) ||
-        (CONTAINSSTRING(PayAcct, "DNB") && CONTAINSSTRING(RecAcct, "DBB"))
-    ), "DBB <-> DNB",
-    (
-        (CONTAINSSTRING(PayAcct, "BOF") && CONTAINSSTRING(RecAcct, "DNB")) ||
-        (CONTAINSSTRING(PayAcct, "DNB") && CONTAINSSTRING(RecAcct, "BOF"))
-    ), "BOF <-> DNB",
-    "Other"
-)
+        not Text.IsNullOrEmpty([PAYACCT]) and not Text.IsNullOrEmpty([RECACCT]) and
+        (
+            (Text.Contains([PAYACCT], "DBB", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase)) or 
+            (Text.Contains([PAYACCT], "EUROCLEAR", Comparer.OrdinalIgnoreCase) and Text.Contains([RECACCT], "DBB", Comparer.OrdinalIgnoreCase))
+        )
+    ) then "DBB <-> EC"
+/* Repeat for other conditions */
+else "Other"
+
